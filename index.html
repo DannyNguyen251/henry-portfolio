@@ -459,7 +459,9 @@
 <section id="impact">
   <div class="section-tag">By the numbers</div>
   <h2 class="section-title">Measurable impact</h2>
-  <div class="impact-grid">
+
+  <!-- STAT CARDS -->
+  <div class="impact-grid" style="margin-bottom: 2.5rem;">
     <div class="impact-card">
       <div class="impact-num">+150%</div>
       <div class="impact-label">Registration account growth in 6 months</div>
@@ -491,7 +493,148 @@
       <div class="impact-source">Accenture · 2021</div>
     </div>
   </div>
+
+  <!-- CHARTS -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+
+    <!-- Chart 1: Registration growth -->
+    <div style="background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem;">
+      <div style="font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 4px;">SGA · 2025</div>
+      <div style="font-size: 14px; color: var(--text); margin-bottom: 1.2rem; font-weight: 500;">Account & Retention Growth</div>
+      <canvas id="chartGrowth" height="200"></canvas>
+    </div>
+
+    <!-- Chart 2: CPA & CPL reduction -->
+    <div style="background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem;">
+      <div style="font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 4px;">Cost Efficiency</div>
+      <div style="font-size: 14px; color: var(--text); margin-bottom: 1.2rem; font-weight: 500;">CPA & Cost Per Lead Reduction</div>
+      <canvas id="chartCost" height="200"></canvas>
+    </div>
+
+    <!-- Chart 3: Conversion & Lead growth -->
+    <div style="background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; grid-column: 1 / -1;">
+      <div style="font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 4px;">Accenture · 2017–2021</div>
+      <div style="font-size: 14px; color: var(--text); margin-bottom: 1.2rem; font-weight: 500;">Conversion Rate & Lead Generation Growth</div>
+      <canvas id="chartAccenture" height="120"></canvas>
+    </div>
+
+  </div>
 </section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+  const accent = '#c8a96e';
+  const accent2 = '#e8c98e';
+  const muted = '#8fa3b8';
+  const gridColor = 'rgba(200,169,110,0.1)';
+  const textColor = '#8fa3b8';
+
+  Chart.defaults.color = textColor;
+  Chart.defaults.font.family = "'DM Sans', sans-serif";
+  Chart.defaults.font.size = 11;
+
+  // Chart 1: Account & Retention Growth
+  new Chart(document.getElementById('chartGrowth'), {
+    type: 'bar',
+    data: {
+      labels: ['Accounts (Before)', 'Accounts (After 6M)', 'Retention (Before)', 'Retention (After)'],
+      datasets: [{
+        data: [100, 250, 10, 25],
+        backgroundColor: ['rgba(200,169,110,0.25)', 'rgba(200,169,110,0.9)', 'rgba(143,163,184,0.25)', 'rgba(143,163,184,0.8)'],
+        borderColor: [accent, accent, muted, muted],
+        borderWidth: 1,
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false }, tooltip: {
+        callbacks: { label: ctx => ctx.parsed.y + (ctx.dataIndex <= 1 ? ' (indexed)' : '%') }
+      }},
+      scales: {
+        x: { grid: { color: gridColor }, ticks: { color: textColor } },
+        y: { grid: { color: gridColor }, ticks: { color: textColor } }
+      }
+    }
+  });
+
+  // Chart 2: CPA & CPL reduction
+  new Chart(document.getElementById('chartCost'), {
+    type: 'doughnut',
+    data: {
+      labels: ['CPA Reduced (SGA)', 'CPA Remaining', 'CPL Reduced (Blacksire)', 'CPL Remaining'],
+      datasets: [{
+        data: [40, 60, 30, 70],
+        backgroundColor: [
+          'rgba(200,169,110,0.9)',
+          'rgba(200,169,110,0.15)',
+          'rgba(143,163,184,0.8)',
+          'rgba(143,163,184,0.15)',
+        ],
+        borderColor: ['#0d1b2a'],
+        borderWidth: 2,
+        hoverOffset: 6,
+      }]
+    },
+    options: {
+      cutout: '60%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { color: textColor, padding: 12, font: { size: 11 }, boxWidth: 12 }
+        },
+        tooltip: {
+          callbacks: { label: ctx => ctx.label + ': ' + ctx.parsed + '%' }
+        }
+      }
+    }
+  });
+
+  // Chart 3: Accenture timeline
+  new Chart(document.getElementById('chartAccenture'), {
+    type: 'line',
+    data: {
+      labels: ['2017', '2018', '2019', '2020', '2021'],
+      datasets: [
+        {
+          label: 'Lead Generation Growth (%)',
+          data: [0, 10, 22, 50, 55],
+          borderColor: accent,
+          backgroundColor: 'rgba(200,169,110,0.08)',
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: accent,
+          pointRadius: 4,
+        },
+        {
+          label: 'Conversion Rate Growth (%)',
+          data: [0, 5, 12, 20, 30],
+          borderColor: muted,
+          backgroundColor: 'rgba(143,163,184,0.06)',
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: muted,
+          pointRadius: 4,
+        }
+      ]
+    },
+    options: {
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { color: textColor, padding: 16, font: { size: 11 }, boxWidth: 12 }
+        },
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': +' + ctx.parsed.y + '%' } }
+      },
+      scales: {
+        x: { grid: { color: gridColor }, ticks: { color: textColor } },
+        y: {
+          grid: { color: gridColor }, ticks: { color: textColor, callback: v => '+' + v + '%' },
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
 
 <hr class="divider">
 
@@ -504,7 +647,7 @@
     <div class="contact-links">
       <a href="mailto:nmthanh252@gmail.com" class="contact-link">✉ nmthanh252@gmail.com</a>
       <a href="tel:+84941044730" class="contact-link">✆ 0941 044 730</a>
-      <a href="https://linkedin.com/in/henrynguyen252/" class="contact-link" target="_blank">in LinkedIn</a>
+      <a href="https://linkedin.com/in/YOUR-LINKEDIN-HERE" class="contact-link" target="_blank">in LinkedIn</a>
     </div>
   </div>
 </section>
